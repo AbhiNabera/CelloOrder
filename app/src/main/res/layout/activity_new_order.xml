@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dp"
+    android:orientation="vertical" >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/roundbutton2">
+
+        <com.example.wonglab.jmorder.CustomerAutoCompleteView
+            android:id="@+id/myautocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:completionThreshold="1"
+            android:drawableLeft="@drawable/ic_customer"
+            android:inputType="textCapCharacters"
+            android:drawablePadding="10dp"
+            android:fontFamily="casual"
+            android:hint="Customer Name"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold">
+
+        </com.example.wonglab.jmorder.CustomerAutoCompleteView>
+        <com.example.wonglab.jmorder.ProductAutoCompleteView
+            android:id="@+id/myautocomplete1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:completionThreshold="1"
+            android:fontFamily="casual"
+            android:inputType="textCapCharacters"
+            android:hint="Item Name"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:paddingLeft="10dp"
+            android:textStyle="bold">
+        </com.example.wonglab.jmorder.ProductAutoCompleteView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/qty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Qty"
+                android:paddingLeft="10dp"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:fontFamily="casual"
+                android:ems="4"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/roundbutton"
+                android:fontFamily="casual"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:text="Add" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="2dp"
+        android:layout_height="2dp"
+        android:background="#000000"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="297dp"
+        android:orientation="vertical">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/orderListRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="150dp"
+            android:layout_gravity="end"
+            android:layout_height="wrap_content"
+            android:background="@drawable/roundbutton"
+            android:fontFamily="casual"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:text="Save" />
+    </LinearLayout>
+
+</LinearLayout>
