@@ -9,22 +9,34 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "order")
 public class Order {
 
-    @DatabaseField(id = true, columnName = "customer_name")
+    @DatabaseField(columnName = "customer_name")
     public String customer_name;
 
-    @DatabaseField(columnName = "timestamp")
+    @DatabaseField(id = true, columnName = "timestamp")
     public String timestamp;
+
+    @DatabaseField(columnName = "status")
+    public boolean status;
     
     @ForeignCollectionField(eager = true)
     public ForeignCollection<Item> items;
 
     public Order(){}
 
-    public Order(String timestamp, String customer_name, ForeignCollection<Item> items){
+    public Order(String timestamp, String customer_name, ForeignCollection<Item> items, boolean status){
 
+        this.status = status;
         this.timestamp = timestamp;
         this.customer_name = customer_name;
         this.items = items;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 
     public String getTimestamp() {

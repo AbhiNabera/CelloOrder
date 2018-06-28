@@ -41,6 +41,7 @@ import com.example.wonglab.jmorder.Database.DatabaseHelper;
 import com.example.wonglab.jmorder.Database.Item;
 import com.example.wonglab.jmorder.Database.Order;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.table.TableUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -173,8 +174,6 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
                     myAutoComplete1.setText("");
                     qty.setText("");
                     myAutoComplete1.requestFocus();
-
-                    addItem(itemName, quantity, custName);
                 }
             }
         });
@@ -214,6 +213,9 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
                 qtyTo.requestFocus();
             }
         });
+
+        //getAllstackOrder();
+        clear();
 
     }
 
@@ -283,20 +285,36 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
     }
 
 
+    //TODO: use this to get add the data in database and convert it to excel file
+    public void getAllstackOrder(){
+
+        try {
+            List<Order> orderList = getDatabaseHelper().getOrderDao().queryForAll();
+            Log.d("database size:", ""+ orderList.size());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     //TODO: isko call karna chikne database clear karne ke liye
     public void clear(){
 
         openConnection();
 
         try {
-            orderDao.executeRaw("drop table order;");
-            System.out.println("order table dropped");
+            TableUtils.dropTable(itemDao.getConnectionSource(),Item.class,false);
+            System.out.println("item table dropped");
+            TableUtils.createTable(itemDao.getConnectionSource(),Item.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         try {
-            itemDao.executeRaw("drop table item;");
-            System.out.println("item table dropped");
+            TableUtils.dropTable(orderDao.getConnectionSource(),Order.class,false);
+            //orderDao.executeRaw("drop database orders;");
+            System.out.println("order database dropped");
+            TableUtils.createTable(orderDao.getConnectionSource(),Order.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -311,32 +329,29 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
         Order order = new Order();
         order.setTimestamp(System.currentTimeMillis()+"");
         order.setCustomer_name(customer_name);
+        order.setStatus(false); //TODO: after sending details to mail set the order status to true in getAllstackOrder()
 
         try {
             orderDao.createOrUpdate(order);
             Log.d("order stored","successfully");
+
+            Toast.makeText(NewOrderActivity.this, "Order created and stored successfully", Toast.LENGTH_LONG).show();
+
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        for(int i = 0; i < itemInput.size(); i++){
+            addItem(itemInput.get(i),  qtyInput.get(i), customer_name, order);
         }
 
         closeConnection();
 
     }
 
-    private void addItem(String item_name, String quantity, String customer_name){
+    private void addItem(String item_name, String quantity, String customer_name, Order order){
 
-        openConnection();
-
-        Order order = new Order();
-        order.setTimestamp(System.currentTimeMillis()+"");
-        order.setCustomer_name(customer_name);
-
-        try {
-            orderDao.createOrUpdate(order);
-            Log.d("order stored","successfully");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        //openConnection();
 
         Item item = new Item();
 
@@ -351,7 +366,7 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
             e.printStackTrace();
         }
 
-        closeConnection();
+        //closeConnection();
 
     }
 
