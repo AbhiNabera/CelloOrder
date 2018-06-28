@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.Selection;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -35,16 +37,30 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wonglab.jmorder.Database.DatabaseHelper;
+import com.example.wonglab.jmorder.Database.Item;
+import com.example.wonglab.jmorder.Database.Order;
+import com.j256.ormlite.dao.Dao;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class NewOrderActivity extends AppCompatActivity implements OrderRecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+
+    static DatabaseHelper databaseHelper;
+    private Dao<Order, String> orderDao;
+    private Dao<Item, String> itemDao;
+
+    private Order order;
+
+    private String timestamp;
 
     private RecyclerView orderListRecycler;
     private RecyclerView.Adapter orderListAdapter;
@@ -79,6 +95,10 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_new_order);
         getSupportActionBar().hide();
+
+        timestamp = ""+System.currentTimeMillis();
+
+        order = new Order();
 
         try {
             copyDataBase1();
@@ -132,6 +152,8 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new OrderRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(orderListRecycler);
 
+        //save to database
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,6 +173,8 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
                     myAutoComplete1.setText("");
                     qty.setText("");
                     myAutoComplete1.requestFocus();
+
+                    addItem(itemName, quantity, custName);
                 }
             }
         });
@@ -158,6 +182,14 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String custName = myAutoComplete.getText().toString();
+                if(custName.length() == 0){
+                    Toast.makeText(NewOrderActivity.this, "Enter Customer Name!", Toast.LENGTH_SHORT).show(); }
+                else{
+
+                    save(custName);
+                }
             }
         });
 
@@ -249,6 +281,117 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
             e.printStackTrace();
         }
     }
+
+
+    //TODO: isko call karna chikne database clear karne ke liye
+    public void clear(){
+
+        openConnection();
+
+        try {
+            orderDao.executeRaw("drop table order;");
+            System.out.println("order table dropped");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            itemDao.executeRaw("drop table item;");
+            System.out.println("item table dropped");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        closeConnection();
+    }
+
+    private void save(String customer_name){
+
+        openConnection();
+
+        Order order = new Order();
+        order.setTimestamp(System.currentTimeMillis()+"");
+        order.setCustomer_name(customer_name);
+
+        try {
+            orderDao.createOrUpdate(order);
+            Log.d("order stored","successfully");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        closeConnection();
+
+    }
+
+    private void addItem(String item_name, String quantity, String customer_name){
+
+        openConnection();
+
+        Order order = new Order();
+        order.setTimestamp(System.currentTimeMillis()+"");
+        order.setCustomer_name(customer_name);
+
+        try {
+            orderDao.createOrUpdate(order);
+            Log.d("order stored","successfully");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Item item = new Item();
+
+        item.setItem_name(item_name);
+        item.setQuantity(quantity);
+        item.setOrder(order);
+
+        try {
+            itemDao.createOrUpdate(item);
+            Log.d("item stored","successfully");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        closeConnection();
+
+    }
+
+    private DatabaseHelper getDatabaseHelper(){
+        if(databaseHelper == null){
+            databaseHelper = databaseHelper.getHelper(NewOrderActivity.this);
+        }
+        return databaseHelper;
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Runtime.getRuntime().gc();
+
+        if(databaseHelper!=null){
+            databaseHelper.close();
+            databaseHelper = null;
+        }
+
+    }
+
+    public void openConnection(){
+
+        databaseHelper = getDatabaseHelper();
+        try {
+            itemDao = databaseHelper.getItemDao();
+            orderDao = databaseHelper.getOrderDao();
+        } catch (SQLException e) {
+            Log.e("Error getting helper : ", e.getErrorCode() + " " + e.getMessage());
+        }
+    }
+
+    public void closeConnection(){
+        if(databaseHelper!=null){
+            databaseHelper.close();
+            databaseHelper = null;
+        }
+    }
+
 
     public void copyDataBase2() throws IOException {
         String package_name = getApplicationContext().getPackageName();
