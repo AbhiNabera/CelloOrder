@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
-    private static final String DATABASE_NAME = "ordersDb";
+    private static final String DATABASE_NAME = "OrderDatabase";
     private static final int DATABASE_VERSION = 1;
     private Dao<Order, String> orderDao;
     private Dao<Item, String> itemDao;

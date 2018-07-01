@@ -8,17 +8,14 @@ public class CustomerAutoCompleteView extends android.support.v7.widget.AppCompa
 
     public CustomerAutoCompleteView(Context context) {
         super(context);
-        // TODO Auto-generated constructor stub
     }
 
     public CustomerAutoCompleteView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        // TODO Auto-generated constructor stub
     }
 
     public CustomerAutoCompleteView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        // TODO Auto-generated constructor stub
     }
 
     // this is how to disable AutoCompleteTextView filter

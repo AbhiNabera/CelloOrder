@@ -186,8 +186,8 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
                 if(custName.length() == 0){
                     Toast.makeText(NewOrderActivity.this, "Enter Customer Name!", Toast.LENGTH_SHORT).show(); }
                 else{
-
                     save(custName);
+                    myAutoComplete.requestFocus();
                 }
             }
         });
@@ -196,7 +196,6 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
         custFrom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> p, View v, int pos, long id) {
-                //TODO: set focus on next view
                 AutoCompleteTextView itemTo = (AutoCompleteTextView) findViewById(R.id.myautocomplete1);
                 itemTo.setFocusableInTouchMode(true);
                 itemTo.requestFocus();
@@ -207,7 +206,6 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
         itemFrom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> p, View v, int pos, long id) {
-                //TODO: set focus on next view
                 EditText qtyTo = (EditText) findViewById(R.id.qty);
                 qtyTo.setFocusableInTouchMode(true);
                 qtyTo.requestFocus();
@@ -215,8 +213,6 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
         });
 
         //getAllstackOrder();
-        clear();
-
     }
 
     // this function is used in CustomAutoCompleteTextChangedListener.java
@@ -285,7 +281,6 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
     }
 
 
-    //TODO: use this to get add the data in database and convert it to excel file
     public void getAllstackOrder(){
 
         try {
@@ -297,30 +292,7 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
 
     }
 
-    //TODO: isko call karna chikne database clear karne ke liye
-    public void clear(){
 
-        openConnection();
-
-        try {
-            TableUtils.dropTable(itemDao.getConnectionSource(),Item.class,false);
-            System.out.println("item table dropped");
-            TableUtils.createTable(itemDao.getConnectionSource(),Item.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            TableUtils.dropTable(orderDao.getConnectionSource(),Order.class,false);
-            //orderDao.executeRaw("drop database orders;");
-            System.out.println("order database dropped");
-            TableUtils.createTable(orderDao.getConnectionSource(),Order.class);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        closeConnection();
-    }
 
     private void save(String customer_name){
 
@@ -329,13 +301,15 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
         Order order = new Order();
         order.setTimestamp(System.currentTimeMillis()+"");
         order.setCustomer_name(customer_name);
-        order.setStatus(false); //TODO: after sending details to mail set the order status to true in getAllstackOrder()
+        order.setStatus(false);
 
         try {
             orderDao.createOrUpdate(order);
             Log.d("order stored","successfully");
 
-            Toast.makeText(NewOrderActivity.this, "Order created and stored successfully", Toast.LENGTH_LONG).show();
+            Toast.makeText(NewOrderActivity.this, "Order created and stored!", Toast.LENGTH_LONG).show();
+
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -347,7 +321,13 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
 
         closeConnection();
 
+        myAutoComplete.setText("");
+        itemInput.clear();
+        qtyInput.clear();
+        orderListAdapter.notifyDataSetChanged();
+
     }
+
 
     private void addItem(String item_name, String quantity, String customer_name, Order order){
 
