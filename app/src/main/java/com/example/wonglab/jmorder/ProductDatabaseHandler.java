@@ -110,9 +110,9 @@ public class ProductDatabaseHandler extends SQLiteOpenHelper {
         // select query
         String sql = "";
         sql += "SELECT * FROM " + tableName;
-        sql += " WHERE " + fieldObjectName + " LIKE '%" + searchTerm + "%'";
+        sql += " WHERE " + fieldObjectName + " LIKE '" + searchTerm + "%'";
         sql += " ORDER BY " + fieldObjectId + " DESC";
-        sql += " LIMIT 0,5";
+        sql += " LIMIT 0,50";
 
         SQLiteDatabase db = this.getWritableDatabase();
 

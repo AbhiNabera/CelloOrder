@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.wonglab.jmorder.Database.DatabaseHelper;
@@ -50,7 +51,8 @@ public class HomeActivity extends AppCompatActivity {
     private Dao<Order, String> orderDao;
     private Dao<Item, String> itemDao;
     private int STORAGE_PERMISSION_CODE = 1;
-    Button newOrder, sendOrders, deleteOrders;
+    Button newOrder, sendOrders;
+    ImageButton deleteOrders;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
 
         newOrder = (Button) findViewById(R.id.new_order);
         sendOrders = (Button) findViewById(R.id.send_orders);
-        deleteOrders = (Button) findViewById(R.id.delete_orders);
+        deleteOrders = (ImageButton) findViewById(R.id.delete_orders);
 
         newOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,8 +83,24 @@ public class HomeActivity extends AppCompatActivity {
         deleteOrders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clear();
-                Toast.makeText(HomeActivity.this, "Deleted Order Database!", Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(HomeActivity.this)
+                        .setTitle("Are you sure?")
+                        .setMessage("All the orders either sent or unsent would be deleted! Do you want to proceed?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                clear();
+                                Toast.makeText(HomeActivity.this, "Deleted Order Database!", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .create()
+                        .show();
             }
         });
     }
@@ -169,7 +187,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.d("CSV", "Write to CSV successful");
             File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Orders.csv");
             Uri attachment = Uri.fromFile(f);
-            String[] addresses = {"abhinabera@gmail.com"};
+            String[] addresses = {"orders.jm1995@gmail.com"};
             String subject = "JM Orders";
             composeEmail(addresses, subject, attachment);
         }

@@ -40,20 +40,18 @@
         android:textColor="#ffffff"
         android:textSize="20dp" />
 
-    <Button
+    <ImageButton
         android:id="@+id/delete_orders"
-        android:layout_width="220dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/roundbutton"
         android:layout_centerHorizontal="true"
-        android:drawableLeft="@drawable/ic_delete"
-        android:layout_below="@+id/send_orders"
-        android:layout_marginTop="5dp"
-        android:drawablePadding="10dp"
+        android:src="@drawable/ic_delete"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
+        android:layout_toRightOf="@id/send_orders"
         android:elevation="10dp"
-        android:fontFamily="casual"
-        android:padding="20dp"
-        android:text="Delete"
-        android:textColor="#ffffff"
-        android:textSize="20dp" />
+         />
 </RelativeLayout>
