@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -186,7 +187,7 @@ public class HomeActivity extends AppCompatActivity {
             bw.close();
             Log.d("CSV", "Write to CSV successful");
             File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Orders.csv");
-            Uri attachment = Uri.fromFile(f);
+            Uri attachment = FileProvider.getUriForFile(HomeActivity.this, BuildConfig.APPLICATION_ID + ".provider",f);
             String[] addresses = {"orders.jm1995@gmail.com"};
             String subject = "JM Orders";
             composeEmail(addresses, subject, attachment);
