@@ -16,7 +16,7 @@ public class OrderListRecyclerAdapter extends RecyclerView.Adapter<OrderListRecy
 
     //private List<String> values_name;
     //private List<String> values_qty;
-    private List<Item> dataset;
+    private List<Item> itemList;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -39,23 +39,30 @@ public class OrderListRecyclerAdapter extends RecyclerView.Adapter<OrderListRecy
         }
     }
 
+    /*
     public void add(int position, String itemName, String qty) {
-        values_name.add(position, itemName);
-        //dataset.add()
-        values_qty.add(position, qty);
+        //values_name.add(position, itemName);
+        //values_qty.add(position, qty);
+        Item item = new Item();
+        item.setItem_name(itemName);
+        item.setQuantity(qty);
+        itemList.add(position, item);
         notifyItemInserted(position);
     }
-
+*/
     public void remove(int position) {
-        values_name.remove(position);
-        values_qty.remove(position);
+        //values_name.remove(position);
+        //values_qty.remove(position);
+        itemList.remove(position);
         notifyItemRemoved(position);
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public OrderListRecyclerAdapter(List<Item> myDataset) {
-        values_name = myDatasetItem;
-        values_qty = myDatasetQty;
+
+    public OrderListRecyclerAdapter(List<Item> itemList) {
+        //values_name = myDatasetItem;
+        //values_qty = myDatasetQty;
+        this.itemList = itemList;
     }
 
     // Create new views (invoked by the layout manager)
@@ -77,8 +84,8 @@ public class OrderListRecyclerAdapter extends RecyclerView.Adapter<OrderListRecy
     public void onBindViewHolder(ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        final String name = values_name.get(position);
-        final String qty = values_qty.get(position);
+        final String name = itemList.get(position).getItem_name();
+        final String qty = itemList.get(position).getQuantity();
         holder.itemName.setText(name);
         holder.quantity.setText(qty);
     }
@@ -86,7 +93,7 @@ public class OrderListRecyclerAdapter extends RecyclerView.Adapter<OrderListRecy
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return values_name.size();
+        return itemList.size();
     }
 
 }

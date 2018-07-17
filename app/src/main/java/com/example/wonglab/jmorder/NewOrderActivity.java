@@ -87,9 +87,9 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
     EditText qty;
     Button add, save;
 
-    List<Item> item_list = new ArrayList<>();
     //List<String> itemInput = new ArrayList<>();
     //List<String> qtyInput = new ArrayList<>();
+    List<Item> item_list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +178,7 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
                     item.setQuantity(quantity);
                     item_list.add(item);
                     orderListAdapter.notifyDataSetChanged();
+
                     myAutoComplete1.setText("");
                     qty.setText("");
                     myAutoComplete1.requestFocus();
@@ -426,16 +427,16 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof OrderListRecyclerAdapter.ViewHolder) {
-            // get the removed item name to display it in snack bar
-            Item name = item_list.get(viewHolder.getAdapterPosition());
+            //String name = item_list.get(viewHolder.getAdapterPosition()).getItem_name();
 
             // backup of removed item for undo purpose
-            //final String deletedItem = itemInput.get(viewHolder.getAdapterPosition());
+            //final String deletedItem = item_list.get(viewHolder.getAdapterPosition()).getItem_name();
             //final int deletedIndex = viewHolder.getAdapterPosition();
 
             // remove the item from recycler view
-            item_list.remove(item_list.get(viewHolder.getAdapterPosition()));
+            //itemInput.remove(itemInput.get(viewHolder.getAdapterPosition()));
             //qtyInput.remove(qtyInput.get(viewHolder.getAdapterPosition()));
+            item_list.remove(position);
             orderListAdapter.notifyDataSetChanged();
         }
     }
