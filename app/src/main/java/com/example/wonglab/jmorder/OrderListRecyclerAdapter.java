@@ -8,12 +8,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.wonglab.jmorder.Database.Item;
+
 import java.util.List;
 
 public class OrderListRecyclerAdapter extends RecyclerView.Adapter<OrderListRecyclerAdapter.ViewHolder> {
 
-    private List<String> values_name;
-    private List<String> values_qty;
+    //private List<String> values_name;
+    //private List<String> values_qty;
+    private List<Item> dataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -38,6 +41,7 @@ public class OrderListRecyclerAdapter extends RecyclerView.Adapter<OrderListRecy
 
     public void add(int position, String itemName, String qty) {
         values_name.add(position, itemName);
+        //dataset.add()
         values_qty.add(position, qty);
         notifyItemInserted(position);
     }
@@ -49,7 +53,7 @@ public class OrderListRecyclerAdapter extends RecyclerView.Adapter<OrderListRecy
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public OrderListRecyclerAdapter(List<String> myDatasetItem, List<String> myDatasetQty) {
+    public OrderListRecyclerAdapter(List<Item> myDataset) {
         values_name = myDatasetItem;
         values_qty = myDatasetQty;
     }

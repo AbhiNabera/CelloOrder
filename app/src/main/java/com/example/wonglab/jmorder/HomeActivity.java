@@ -57,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     private Dao<Item, String> itemDao;
     private int STORAGE_PERMISSION_CODE = 1;
     Button newOrder, sendOrders;
-    ImageButton deleteOrders;
+    ImageButton add, deleteOrders;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +68,7 @@ public class HomeActivity extends AppCompatActivity {
 
         newOrder = (Button) findViewById(R.id.new_order);
         sendOrders = (Button) findViewById(R.id.send_orders);
+        add = (ImageButton) findViewById(R.id.add);
         deleteOrders = (ImageButton) findViewById(R.id.delete_orders);
 
         newOrder.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +83,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 HomeActivityPermissionsDispatcher.readWriteExternalStorageWithPermissionCheck(HomeActivity.this);
+            }
+        });
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent newAddIntent = new Intent(HomeActivity.this, AddActivity.class);
+                startActivity(newAddIntent);
             }
         });
 

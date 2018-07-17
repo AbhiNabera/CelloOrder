@@ -87,8 +87,9 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
     EditText qty;
     Button add, save;
 
-    List<String> itemInput = new ArrayList<>();
-    List<String> qtyInput = new ArrayList<>();
+    List<Item> item_list = new ArrayList<>();
+    //List<String> itemInput = new ArrayList<>();
+    //List<String> qtyInput = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +150,7 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(this);
         orderListRecycler.setLayoutManager(layoutManager);
-        orderListAdapter = new OrderListRecyclerAdapter(itemInput, qtyInput);
+        orderListAdapter = new OrderListRecyclerAdapter(item_list);
         orderListRecycler.setAdapter(orderListAdapter);
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new OrderRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
@@ -170,8 +171,12 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
                 else if(quantity.length() == 0){
                     Toast.makeText(NewOrderActivity.this, "Enter Quantity!", Toast.LENGTH_SHORT).show(); }
                 else{
-                    itemInput.add(itemName);
-                    qtyInput.add(quantity);
+                    //itemInput.add(itemName);
+                    //qtyInput.add(quantity);
+                    Item item = new Item();
+                    item.setItem_name(itemName);
+                    item.setQuantity(quantity);
+                    item_list.add(item);
                     orderListAdapter.notifyDataSetChanged();
                     myAutoComplete1.setText("");
                     qty.setText("");
@@ -316,15 +321,16 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
             e.printStackTrace();
         }
 
-        for(int i = 0; i < itemInput.size(); i++){
-            addItem(itemInput.get(i),  qtyInput.get(i), customer_name, order);
+        for(int i = 0; i < item_list.size(); i++){
+            addItem(item_list.get(i).getItem_name(),  item_list.get(i).getQuantity(), customer_name, order);
         }
 
         closeConnection();
 
         myAutoComplete.setText("");
-        itemInput.clear();
-        qtyInput.clear();
+        //itemInput.clear();
+        //qtyInput.clear();
+        item_list.clear();
         orderListAdapter.notifyDataSetChanged();
 
     }
@@ -421,15 +427,15 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof OrderListRecyclerAdapter.ViewHolder) {
             // get the removed item name to display it in snack bar
-            String name = itemInput.get(viewHolder.getAdapterPosition());
+            Item name = item_list.get(viewHolder.getAdapterPosition());
 
             // backup of removed item for undo purpose
-            final String deletedItem = itemInput.get(viewHolder.getAdapterPosition());
-            final int deletedIndex = viewHolder.getAdapterPosition();
+            //final String deletedItem = itemInput.get(viewHolder.getAdapterPosition());
+            //final int deletedIndex = viewHolder.getAdapterPosition();
 
             // remove the item from recycler view
-            itemInput.remove(itemInput.get(viewHolder.getAdapterPosition()));
-            qtyInput.remove(qtyInput.get(viewHolder.getAdapterPosition()));
+            item_list.remove(item_list.get(viewHolder.getAdapterPosition()));
+            //qtyInput.remove(qtyInput.get(viewHolder.getAdapterPosition()));
             orderListAdapter.notifyDataSetChanged();
         }
     }
