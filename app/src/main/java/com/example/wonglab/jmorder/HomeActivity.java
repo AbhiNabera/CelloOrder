@@ -182,9 +182,13 @@ public class HomeActivity extends AppCompatActivity {
                 bw.write(custName.toString());
                 bw.newLine();
 
+                int i = 1;
                 ForeignCollection<Item> items = order.getItems();
                 for (Item item : items) {
                     StringBuffer oneLine = new StringBuffer();
+                    oneLine.append(i);
+                    oneLine.append(CSV_SEPARATOR);
+                    i = i + 1;
                     oneLine.append(item.getItem_name().trim().length() ==0 ? "" : item.getItem_name());
                     oneLine.append(CSV_SEPARATOR);
                     oneLine.append(item.getQuantity().trim().length() == 0? "" : item.getQuantity());
