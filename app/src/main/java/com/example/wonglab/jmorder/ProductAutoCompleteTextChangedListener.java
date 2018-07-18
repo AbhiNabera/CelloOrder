@@ -115,7 +115,7 @@ public class ProductAutoCompleteTextChangedListener implements TextWatcher {
             //String encodedQuery = URLEncoder.encode(query, "UTF-8");
             rx.Observable<List<Element>> observable = apiInterface.getItemList(query.trim().toUpperCase());
             searchResultsSubscription = observable
-                    .debounce(100, TimeUnit.MILLISECONDS)
+                    .debounce(10, TimeUnit.MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(searchResultsSubscriber());
