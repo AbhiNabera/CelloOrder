@@ -20,6 +20,12 @@ public interface ApiInterface {
     @GET("item")
     rx.Observable<List<Element>> getItemList(@Query("param") String param);
 
+    @GET("customer")
+    Call<List<Element>> getAllCustomerList(@Query("param") String param);
+
+    @GET("item")
+    Call<List<Element>> getAllItemList(@Query("param") String param);
+
     @FormUrlEncoded
     @POST("add_customer")
     Call<JsonObject> add_customer(@Field("name") String name);

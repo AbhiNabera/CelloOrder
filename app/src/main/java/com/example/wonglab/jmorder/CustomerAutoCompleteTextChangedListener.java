@@ -31,6 +31,8 @@ public class CustomerAutoCompleteTextChangedListener implements TextWatcher{
     public Subscription searchResultsSubscription;
 
     NewOrderActivity newOrderActivity;
+    List<Element> allCustomers = NewOrderActivity.allCustomer;
+    List<Element> allItems = NewOrderActivity.allItem;
 
     public CustomerAutoCompleteTextChangedListener(Context context){
         this.context = context;
@@ -59,8 +61,13 @@ public class CustomerAutoCompleteTextChangedListener implements TextWatcher{
         //newOrderActivity.item = newOrderActivity.getItemsFromDb(userInput.toString());
 
         if(userInput.toString().length()!=0) {
-            showSearchResult(userInput.toString());
+            //showSearchResult(userInput.toString());
+            filter(userInput.toString());
         }
+
+    }
+
+    public void filter(String userInput){
 
     }
 

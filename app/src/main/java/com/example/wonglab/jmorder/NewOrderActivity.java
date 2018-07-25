@@ -39,6 +39,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wonglab.jmorder.API.Element;
 import com.example.wonglab.jmorder.Database.DatabaseHelper;
 import com.example.wonglab.jmorder.Database.Item;
 import com.example.wonglab.jmorder.Database.Order;
@@ -81,8 +82,11 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
     ProductDatabaseHandler databaseH1;
 
     // just to add some initial value
-    String[] item = new String[] {"Please search..."};
-    String[] item1 = new String[] {"Please search..."};
+    String[] item = new String[] {"Loading..."};
+    String[] item1 = new String[] {"Loading..."};
+
+    public static List<Element> allCustomer = new ArrayList();
+    public static List<Element> allItem = new ArrayList();
 
     EditText qty;
     Button add, save;

@@ -25,6 +25,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.wonglab.jmorder.API.ApiInterface;
+import com.example.wonglab.jmorder.API.Element;
 import com.example.wonglab.jmorder.Database.DatabaseHelper;
 import com.example.wonglab.jmorder.Database.Item;
 import com.example.wonglab.jmorder.Database.Order;
@@ -40,6 +42,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import permissions.dispatcher.NeedsPermission;
@@ -47,6 +51,12 @@ import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.wonglab.jmorder.NewOrderActivity.databaseHelper;
 
@@ -74,6 +84,7 @@ public class HomeActivity extends AppCompatActivity {
         newOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                initialize();
                 Intent newOrderIntent = new Intent(HomeActivity.this, NewOrderActivity.class);
                 startActivity(newOrderIntent);
             }
@@ -115,6 +126,45 @@ public class HomeActivity extends AppCompatActivity {
                         })
                         .create()
                         .show();
+            }
+        });
+    }
+
+    public void initialize(){
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://us-central1-jmorder-53c71.cloudfunctions.net/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+        final ApiInterface apiInterface = retrofit.create(ApiInterface.class);
+
+        apiInterface.getAllCustomerList("").enqueue(new Callback<List<Element>>() {
+            @Override
+            public void onResponse(Call<List<Element>> call, Response<List<Element>> response) {
+                if(response.isSuccessful()){
+                    Log.d("Home Activity", response.body().toString());
+                    NewOrderActivity.allCustomer = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Element>> call, Throwable t) {
+
+            }
+        });
+
+        apiInterface.getAllItemList("").enqueue(new Callback<List<Element>>() {
+            @Override
+            public void onResponse(Call<List<Element>> call, Response<List<Element>> response) {
+                if(response.isSuccessful()){
+                    Log.d("Home Activity", response.body().toString());
+                    NewOrderActivity.allItem = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Element>> call, Throwable t) {
+
             }
         });
     }
