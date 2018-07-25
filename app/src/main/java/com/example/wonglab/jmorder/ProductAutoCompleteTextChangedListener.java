@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import com.example.wonglab.jmorder.API.ApiInterface;
 import com.example.wonglab.jmorder.API.Element;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -58,9 +59,31 @@ public class ProductAutoCompleteTextChangedListener implements TextWatcher {
         //newOrderActivity.item1 = newOrderActivity.getItemsFromDb1(userInput.toString());
 
         if(userInput.toString().length()!=0) {
-            showSearchResult(userInput.toString());
+            //showSearchResult(userInput.toString());
+            filterItem(userInput.toString());
         }
 
+    }
+
+    public void filterItem(String userInput){
+
+        ArrayList<String> temp_list = new ArrayList<>();
+
+        for(Element element: NewOrderActivity.allItem){
+            if(element.getName().indexOf(userInput)==0){
+                temp_list.add(element.getName());
+            }
+        }
+
+        String[] list = new String[temp_list.size()];
+        for(int i= 0; i < temp_list.size(); i++){
+            list[i] = temp_list.get(i);
+        }
+        newOrderActivity.item1 = list;
+
+        newOrderActivity.myAdapter1.notifyDataSetChanged();
+        newOrderActivity.myAdapter1 = new ArrayAdapter<String>(newOrderActivity, android.R.layout.simple_dropdown_item_1line, newOrderActivity.item1);
+        newOrderActivity.myAutoComplete1.setAdapter(newOrderActivity.myAdapter1);
     }
 
     public Subscriber<List<Element>> searchResultsSubscriber() {

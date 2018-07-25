@@ -1,6 +1,7 @@
 package com.example.wonglab.jmorder;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -68,6 +69,8 @@ public class HomeActivity extends AppCompatActivity {
     private int STORAGE_PERMISSION_CODE = 1;
     Button newOrder, sendOrders;
     ImageButton add, deleteOrders;
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +78,10 @@ public class HomeActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home);
         getSupportActionBar().hide();
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Fetching data...");
+        progressDialog.setCancelable(false);
 
         newOrder = (Button) findViewById(R.id.new_order);
         sendOrders = (Button) findViewById(R.id.send_orders);
@@ -85,8 +92,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 initialize();
-                Intent newOrderIntent = new Intent(HomeActivity.this, NewOrderActivity.class);
-                startActivity(newOrderIntent);
             }
         });
 
@@ -131,6 +136,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void initialize(){
+        progressDialog.show();
+
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://us-central1-jmorder-53c71.cloudfunctions.net/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -144,12 +151,15 @@ public class HomeActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     Log.d("Home Activity", response.body().toString());
                     NewOrderActivity.allCustomer = response.body();
+                    isCompleted1 = true;
+                    activityTransition();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Element>> call, Throwable t) {
-
+                progressDialog.dismiss();
+                Toast.makeText(HomeActivity.this, "Network failure! Check internet connection.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -159,14 +169,33 @@ public class HomeActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     Log.d("Home Activity", response.body().toString());
                     NewOrderActivity.allItem = response.body();
+                    isCompleted2 = true;
+                    activityTransition();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Element>> call, Throwable t) {
-
+                progressDialog.dismiss();
+                Toast.makeText(HomeActivity.this, "Network failure! Check internet connection.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public boolean isCompleted1 = false, isCompleted2 = false;
+    public void activityTransition(){
+        if(isCompleted1 && isCompleted2){
+            progressDialog.dismiss();
+            Intent newOrderIntent = new Intent(HomeActivity.this, NewOrderActivity.class);
+            startActivity(newOrderIntent);
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        isCompleted1 = false;
+        isCompleted2 = false;
     }
 
     @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})

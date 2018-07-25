@@ -11,6 +11,7 @@ import com.example.wonglab.jmorder.API.ApiInterface;
 import com.example.wonglab.jmorder.API.Element;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -62,13 +63,30 @@ public class CustomerAutoCompleteTextChangedListener implements TextWatcher{
 
         if(userInput.toString().length()!=0) {
             //showSearchResult(userInput.toString());
-            filter(userInput.toString());
+            filterCustomer(userInput.toString());
         }
 
     }
 
-    public void filter(String userInput){
+    public void filterCustomer(String userInput){
 
+        ArrayList<String> temp_list = new ArrayList<>();
+
+        for(Element element: NewOrderActivity.allCustomer){
+            if(element.getName().indexOf(userInput)==0){
+                temp_list.add(element.getName());
+            }
+        }
+
+        String[] list = new String[temp_list.size()];
+        for(int i= 0; i < temp_list.size(); i++){
+            list[i] = temp_list.get(i);
+        }
+        newOrderActivity.item = list;
+
+        newOrderActivity.myAdapter.notifyDataSetChanged();
+        newOrderActivity.myAdapter = new ArrayAdapter<String>(newOrderActivity, android.R.layout.simple_dropdown_item_1line, newOrderActivity.item);
+        newOrderActivity.myAutoComplete.setAdapter(newOrderActivity.myAdapter);
     }
 
     public Subscriber<List<Element>> searchResultsSubscriber() {
