@@ -55,6 +55,7 @@ public class AddActivity extends AppCompatActivity {
                 Button add_cust_btn = (Button) dialog.findViewById(R.id.add_cust_btn);
                 dialog.show();
 
+                add_cust_edit.setFocusableInTouchMode(true);
                 add_cust_edit.requestFocus();
 
                 add_cust_btn.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +87,8 @@ public class AddActivity extends AppCompatActivity {
                 final EditText add_item_edit = (EditText) dialog.findViewById(R.id.add_item_edit);
                 Button add_item_btn = (Button) dialog.findViewById(R.id.add_item_btn);
                 dialog.show();
+
+                add_item_edit.setFocusableInTouchMode(true);
                 add_item_edit.requestFocus();
 
                 add_item_btn.setOnClickListener(new View.OnClickListener() {

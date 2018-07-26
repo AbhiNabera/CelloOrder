@@ -50,8 +50,11 @@
         <activity
             android:name=".NewOrderActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".AddActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".AddActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".AddActivityPassword"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
