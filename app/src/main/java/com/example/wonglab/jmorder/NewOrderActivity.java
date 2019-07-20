@@ -1,41 +1,28 @@
 package com.example.wonglab.jmorder;
 
+
 import android.app.Activity;
-import android.app.ListActivity;
-import android.content.ClipData;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
+import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Editable;
-import android.text.Selection;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.ImageButton;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +31,6 @@ import com.example.wonglab.jmorder.Database.DatabaseHelper;
 import com.example.wonglab.jmorder.Database.Item;
 import com.example.wonglab.jmorder.Database.Order;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.table.TableUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -66,6 +52,8 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
 
     private String timestamp;
 
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private static Bundle mBundleRecyclerViewState;
     private RecyclerView orderListRecycler;
     private RecyclerView.Adapter orderListAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -148,6 +136,7 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
         orderListRecycler = (RecyclerView) findViewById(R.id.orderListRecycler);
         add = (Button) findViewById(R.id.add);
         save = (Button) findViewById(R.id.save);
+
         qty = (EditText) findViewById(R.id.qty);
         orderListRecycler.setHasFixedSize(true);
 
@@ -190,6 +179,16 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
             }
         });
 
+        qty.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (i == EditorInfo.IME_ACTION_DONE)){
+                    add.performClick();
+                }
+                return false;
+            }
+        });
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -224,7 +223,23 @@ public class NewOrderActivity extends AppCompatActivity implements OrderRecycler
             }
         });
 
-        //getAllstackOrder();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = orderListRecycler.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mBundleRecyclerViewState != null) {
+            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+            orderListRecycler.getLayoutManager().onRestoreInstanceState(listState);
+        }
     }
 
     // this function is used in CustomAutoCompleteTextChangedListener.java

@@ -2,6 +2,7 @@ package com.example.wonglab.jmorder;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -167,5 +168,12 @@ public class AddActivity extends AppCompatActivity {
                 pd.cancel();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(AddActivity.this, HomeActivity.class);
+        startActivity(i);
+        finish();
     }
 }

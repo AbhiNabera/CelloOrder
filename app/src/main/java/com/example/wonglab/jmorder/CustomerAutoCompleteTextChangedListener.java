@@ -78,6 +78,7 @@ public class CustomerAutoCompleteTextChangedListener implements TextWatcher{
             }
         }
 
+
         String[] list = new String[temp_list.size()];
         for(int i= 0; i < temp_list.size(); i++){
             list[i] = temp_list.get(i);
@@ -87,6 +88,7 @@ public class CustomerAutoCompleteTextChangedListener implements TextWatcher{
         newOrderActivity.myAdapter.notifyDataSetChanged();
         newOrderActivity.myAdapter = new ArrayAdapter<String>(newOrderActivity, android.R.layout.simple_dropdown_item_1line, newOrderActivity.item);
         newOrderActivity.myAutoComplete.setAdapter(newOrderActivity.myAdapter);
+
     }
 
     public Subscriber<List<Element>> searchResultsSubscriber() {

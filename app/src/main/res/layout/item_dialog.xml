@@ -20,11 +20,26 @@
         android:textSize="18sp"
         android:textStyle="bold"/>
 
+    <EditText
+        android:id="@+id/add_item_code_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_below="@+id/add_item_edit"
+        android:layout_centerHorizontal="true"
+        android:inputType="textCapCharacters"
+        android:drawablePadding="10dp"
+        android:fontFamily="casual"
+        android:hint="Item Code"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
     <Button
         android:id="@+id/add_item_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/add_item_edit"
+        android:layout_below="@+id/add_item_code_edit"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/roundbutton"

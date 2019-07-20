@@ -53,8 +53,9 @@
         <activity
             android:name=".AddActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".AddActivityPassword"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".AddActivityPassword"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -92,4 +92,10 @@ public class AddActivityPassword extends AppCompatActivity {
         pinView.setCurrentTypedPin(savedInstanceState.getIntArray(ARG_CURRENT_PIN));
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(AddActivityPassword.this, HomeActivity.class);
+        startActivity(i);
+        finish();
+    }
 }

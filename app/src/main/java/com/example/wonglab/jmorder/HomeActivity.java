@@ -70,6 +70,7 @@ public class HomeActivity extends AppCompatActivity {
     Button newOrder, sendOrders;
     ImageButton add, deleteOrders;
     ProgressDialog progressDialog;
+    public String customerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent newAddIntent = new Intent(HomeActivity.this, AddActivityPassword.class);
                 startActivity(newAddIntent);
+                finish();
             }
         });
 
@@ -182,6 +184,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+
     public boolean isCompleted1 = false, isCompleted2 = false;
     public void activityTransition(){
         if(isCompleted1 && isCompleted2){
@@ -190,6 +193,8 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(newOrderIntent);
         }
     }
+
+
 
     @Override
     public void onResume(){
@@ -241,22 +246,26 @@ public class HomeActivity extends AppCompatActivity {
         try {
             List<Order> orderList = getDatabaseHelper().getOrderDao().queryForAll();
             Log.d("database size:", ""+ orderList.size());
-            writeToCSV(orderList);
+            for (Order order : orderList){
+                customerName = order.getCustomer_name().trim().length() == 0 ? "" : order.getCustomer_name();
+            }
+            writeToCSV(orderList, customerName);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     private static final String CSV_SEPARATOR = ",";
-    private void writeToCSV(List<Order> orderList)
+    private void writeToCSV(List<Order> orderList, String customerName)
     {
         Log.d("File Name", Environment.getExternalStorageDirectory().getAbsolutePath());
         try
         {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Orders.csv"), "UTF-8"));
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + customerName + ".csv"), "UTF-8"));
             for (Order order : orderList)
             {
                 StringBuffer custName = new StringBuffer();
+                custName.append(CSV_SEPARATOR);
                 custName.append(order.getCustomer_name().trim().length() ==0 ? "" : order.getCustomer_name());
                 bw.write(custName.toString());
                 bw.newLine();
@@ -282,7 +291,7 @@ public class HomeActivity extends AppCompatActivity {
             bw.flush();
             bw.close();
             Log.d("CSV", "Write to CSV successful");
-            File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Orders.csv");
+            File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + customerName + ".csv");
             Uri attachment = FileProvider.getUriForFile(HomeActivity.this, BuildConfig.APPLICATION_ID + ".provider",f);
             String[] addresses = {"orders.jm1995@gmail.com"};
             String subject = "JM Orders";
